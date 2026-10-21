@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage books, members, and transactions with real-time analytics in the LMS Library Portal.">
+  <title>Dashboard - LMS Library Portal</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="brand">
+        <div class="brand-logo">L</div>
+        <span class="brand-name">LMS Portal</span>
+      </div>
+      
+      <nav class="nav-menu">
+        <li class="nav-item active">
+          <a href="index.html">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="books.html">
+            <i data-lucide="book-open"></i>
+            <span>Books Catalogue</span>
+          </a>
+        </li>
+        <li class="nav-item admin-only">
+          <a href="members.html">
+            <i data-lucide="users"></i>
+            <span>Manage Members</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="transactions.html">
+            <i data-lucide="arrow-left-right"></i>
+            <span>Transactions</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="reports.html">
+            <i data-lucide="bar-chart-3"></i>
+            <span>Analytics & Reports</span>
+          </a>
+        </li>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-profile-badge">
+          <!-- Populated by core.js -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Layout -->
+    <main class="main-layout">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="page-title-area">
+          <h1 class="page-title">Dashboard</h1>
+          <span class="page-subtitle" id="dashboardDate">Monday, July 20, 2026</span>
+        </div>
+        
+        <div class="header-actions">
+          <div class="role-switcher-container">
+            <span>Role:</span>
+            <select id="headerRoleSelect">
+              <option value="Admin">Admin</option>
+              <option value="Member">Member</option>
+            </select>
+          </div>
+          
+          <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Theme">
+            <i data-lucide="moon"></i>
+          </button>
+          
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Mobile Menu">
+            <i data-lucide="menu"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Body -->
+      <div class="content-body">
+        
+        <!-- Welcome banner -->
+        <section class="card welcome-banner-card" style="background: linear-gradient(135deg, var(--primary-light), var(--bg-secondary)); border-left: 5px solid var(--primary); margin-bottom: 2rem;">
+          <div style="max-width: 700px;">
+            <h2 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+              Welcome back, <span id="welcomeUserName">Librarian</span>!
+            </h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;" id="welcomeMessage">
+              Here is your overview of today's library operations. You have active book borrowing requests and pending returns requiring your oversight.
+            </p>
+            <div style="display: flex; gap: 0.75rem;">
+              <a href="transactions.html" class="btn btn-primary" id="welcomePrimaryAction">
+                <i data-lucide="plus-circle"></i> <span>Issue Book</span>
+              </a>
+              <a href="books.html" class="btn btn-secondary">
+                <i data-lucide="search"></i> <span>Search Catalogue</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Stats Grid -->
+        <section class="stat-grid">
+          <div class="card stat-card">
+            <div class="stat-icon-wrapper" style="background-color: var(--primary-light); color: var(--primary);">
+              <i data-lucide="book-open"></i>
+            </div>
+            <div>
+              <div class="stat-value" id="statTotalBooks">0</div>
+              <div class="stat-label">Total Titles</div>
+            </div>
+          </div>
+          
+          <div class="card stat-card">
+            <div class="stat-icon-wrapper" style="background-color: var(--success-light); color: var(--success);">
+              <i data-lucide="check-circle-2"></i>
+            </div>
+            <div>
+              <div class="stat-value" id="statAvailableBooks">0</div>
+              <div class="stat-label">Available Copies</div>
+            </div>
+          </div>
+          
+          <div class="card stat-card admin-only">
+            <div class="stat-icon-wrapper" style="background-color: var(--secondary-light); color: var(--secondary);">
+              <i data-lucide="users"></i>
+            </div>
+            <div>
+              <div class="stat-value" id="statTotalMembers">0</div>
+              <div class="stat-label">Active Members</div>
+            </div>
+          </div>
+          
+          <div class="card stat-card">
+            <div class="stat-icon-wrapper" style="background-color: var(--danger-light); color: var(--danger);">
+              <i data-lucide="alert-triangle"></i>
+            </div>
+            <div>
+              <div class="stat-value" id="statOverdueBooks">0</div>
+              <div class="stat-label">Overdue Books</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Content Grid (Recent Activity & Quick Tools) -->
+        <div class="content-grid-2">
+          
+          <!-- Recent Activity -->
+          <section class="card" style="display: flex; flex-direction: column;">
+            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="history" style="color: var(--primary);"></i> Recent Operations
+            </h3>
+            
+            <div class="table-responsive" style="border: none;">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Member</th>
+                    <th>Book</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="recentActivityList">
+                  <!-- Javascript populated -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Quick Actions Panel -->
+          <section class="card" style="display: flex; flex-direction: column; gap: 1.25rem;">
+            <h3 style="font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="wrench" style="color: var(--secondary);"></i> Shortcut Actions
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr; gap: 0.75rem;" id="quickActionsGrid">
+              <!-- Dynamically populated according to role -->
+            </div>
+          </section>
+          
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <footer class="main-footer">
+        <div>&copy; 2026 LMS Portal. All rights reserved. Built with HSL Style Guidelines.</div>
+        <ul class="footer-links">
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="books.html">Catalogue</a></li>
+          <li><a href="reports.html">Reports</a></li>
+        </ul>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Shared core JS script, followed by page script -->
+  <script src="js/core.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

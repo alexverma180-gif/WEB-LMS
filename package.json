@@ -1,0 +1,26 @@
+{
+  "name": "web-lms",
+  "version": "1.0.0",
+  "description": "Advanced Multi-Page Library Management System (LMS)",
+  "main": "index.html",
+  "scripts": {
+    "dev": "http-server ./ -p 3000 -o"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "keywords": [
+    "library",
+    "management",
+    "system",
+    "lms",
+    "html",
+    "css",
+    "javascript"
+  ],
+  "author": "Antigravity AI",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^25.3.0"
+  }
+}

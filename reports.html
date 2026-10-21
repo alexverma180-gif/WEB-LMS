@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View charts on book inventory categories, borrow frequencies, and overdue logs in the LMS.">
+  <title>Analytics & Reports - LMS Library Portal</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="brand">
+        <div class="brand-logo">L</div>
+        <span class="brand-name">LMS Portal</span>
+      </div>
+      
+      <nav class="nav-menu">
+        <li class="nav-item">
+          <a href="index.html">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="books.html">
+            <i data-lucide="book-open"></i>
+            <span>Books Catalogue</span>
+          </a>
+        </li>
+        <li class="nav-item admin-only">
+          <a href="members.html">
+            <i data-lucide="users"></i>
+            <span>Manage Members</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="transactions.html">
+            <i data-lucide="arrow-left-right"></i>
+            <span>Transactions</span>
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a href="reports.html">
+            <i data-lucide="bar-chart-3"></i>
+            <span>Analytics & Reports</span>
+          </a>
+        </li>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-profile-badge">
+          <!-- Populated by core.js -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Layout -->
+    <main class="main-layout">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="page-title-area">
+          <h1 class="page-title">Library Analytics</h1>
+          <span class="page-subtitle">Visual overview of inventory status and borrow statistics</span>
+        </div>
+        
+        <div class="header-actions">
+          <div class="role-switcher-container">
+            <span>Role:</span>
+            <select id="headerRoleSelect">
+              <option value="Admin">Admin</option>
+              <option value="Member">Member</option>
+            </select>
+          </div>
+          
+          <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Theme">
+            <i data-lucide="moon"></i>
+          </button>
+          
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Mobile Menu">
+            <i data-lucide="menu"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Body -->
+      <div class="content-body">
+        
+        <!-- Key Metrics Cards -->
+        <section class="stat-grid" style="margin-bottom: 2rem;">
+          <div class="card stat-card" style="border-top: 4px solid var(--primary);">
+            <div class="stat-icon-wrapper" style="background-color: var(--primary-light); color: var(--primary);">
+              <i data-lucide="percent"></i>
+            </div>
+            <div>
+              <div class="stat-value" id="kpiCirculation">0%</div>
+              <div class="stat-label">Circulation Rate</div>
+            </div>
+          </div>
+          
+          <div class="card stat-card" style="border-top: 4px solid var(--secondary);">
+            <div class="stat-icon-wrapper" style="background-color: var(--secondary-light); color: var(--secondary);">
+              <i data-lucide="clock-3"></i>
+            </div>
+            <div>
+              <div class="stat-value" id="kpiAvgCheckout">0 days</div>
+              <div class="stat-label">Avg Loan Period</div>
+            </div>
+          </div>
+          
+          <div class="card stat-card" style="border-top: 4px solid var(--success);">
+            <div class="stat-icon-wrapper" style="background-color: var(--success-light); color: var(--success);">
+              <i data-lucide="book-marked"></i>
+            </div>
+            <div>
+              <div class="stat-value" id="kpiMostPopular">None</div>
+              <div class="stat-label">Top Genre</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Charts Grid (2 columns) -->
+        <div class="content-grid-2" style="margin-bottom: 2rem;">
+          <!-- Chart 1: Books by Category -->
+          <section class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px;">
+            <h3 style="font-size: 1.1rem; font-weight: 700; width: 100%; text-align: left; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="pie-chart" style="color: var(--primary);"></i> Books by Category
+            </h3>
+            <div style="position: relative; width: 100%; max-width: 320px; height: 320px; margin: auto;">
+              <canvas id="categoryChart"></canvas>
+            </div>
+          </section>
+
+          <!-- Chart 2: Borrow Status -->
+          <section class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px;">
+            <h3 style="font-size: 1.1rem; font-weight: 700; width: 100%; text-align: left; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="donut-chart" style="color: var(--secondary);"></i> Inventory Availability Status
+            </h3>
+            <div style="position: relative; width: 100%; max-width: 320px; height: 320px; margin: auto;">
+              <canvas id="availabilityChart"></canvas>
+            </div>
+          </section>
+        </div>
+
+        <div class="content-grid-2">
+          <!-- Chart 3: Borrow Frequencies by Title -->
+          <section class="card" style="min-height: 400px; display: flex; flex-direction: column;">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="bar-chart-big" style="color: var(--success);"></i> Top Checked Out Books
+            </h3>
+            <div style="position: relative; width: 100%; height: 100%; min-height: 300px;">
+              <canvas id="frequencyChart"></canvas>
+            </div>
+          </section>
+
+          <!-- List: Overdue Books & Action (Admin Only) -->
+          <section class="card admin-only" style="display: flex; flex-direction: column;" id="overdueReportPanel">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="alert-octagon" style="color: var(--danger);"></i> Overdue Loans Register
+            </h3>
+            
+            <div class="table-responsive" style="border: none;">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Borrower</th>
+                    <th>Book</th>
+                    <th>Days Late</th>
+                    <th>Notice</th>
+                  </tr>
+                </thead>
+                <tbody id="overdueReportTableBody">
+                  <!-- Javascript populated -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+          
+          <!-- Alternative Card for Members (Shows Borrow Insights) -->
+          <section class="card" style="display: none; flex-direction: column;" id="memberInsightsPanel">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="sparkles" style="color: var(--warning);"></i> Catalogue Insights
+            </h3>
+            <div style="padding: 1rem 0; display: flex; flex-direction: column; gap: 1rem;">
+              <div style="background-color: var(--primary-light); padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid var(--primary);">
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem;">Expanding Section: Computers & Tech</h4>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">Our Computer Science section grew by 15% this quarter. Explore new books on web development and programming architecture.</p>
+              </div>
+              <div style="background-color: var(--secondary-light); padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid var(--secondary);">
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem;">Standard Loan Policy Reminder</h4>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">Standard loans are granted for 14 days. You can request renewal for an additional 7 days if the book is not on hold for another member.</p>
+              </div>
+            </div>
+          </section>
+        </div>
+        
+      </div>
+
+      <!-- Footer -->
+      <footer class="main-footer">
+        <div>&copy; 2026 LMS Portal. All rights reserved. Built with HSL Style Guidelines.</div>
+        <ul class="footer-links">
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="books.html">Catalogue</a></li>
+          <li><a href="reports.html">Reports</a></li>
+        </ul>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Shared core JS script, followed by page script -->
+  <script src="js/core.js"></script>
+  <script src="js/reports.js"></script>
+</body>
+</html>

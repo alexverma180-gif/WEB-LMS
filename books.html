@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View and manage the library's catalog, filter by categories, and borrow titles.">
+  <title>Books Catalogue - LMS Library Portal</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="brand">
+        <div class="brand-logo">L</div>
+        <span class="brand-name">LMS Portal</span>
+      </div>
+      
+      <nav class="nav-menu">
+        <li class="nav-item">
+          <a href="index.html">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a href="books.html">
+            <i data-lucide="book-open"></i>
+            <span>Books Catalogue</span>
+          </a>
+        </li>
+        <li class="nav-item admin-only">
+          <a href="members.html">
+            <i data-lucide="users"></i>
+            <span>Manage Members</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="transactions.html">
+            <i data-lucide="arrow-left-right"></i>
+            <span>Transactions</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="reports.html">
+            <i data-lucide="bar-chart-3"></i>
+            <span>Analytics & Reports</span>
+          </a>
+        </li>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-profile-badge">
+          <!-- Populated by core.js -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Layout -->
+    <main class="main-layout">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="page-title-area">
+          <h1 class="page-title">Library Catalogue</h1>
+          <span class="page-subtitle">Search, filter, and manage library books</span>
+        </div>
+        
+        <div class="header-actions">
+          <div class="role-switcher-container">
+            <span>Role:</span>
+            <select id="headerRoleSelect">
+              <option value="Admin">Admin</option>
+              <option value="Member">Member</option>
+            </select>
+          </div>
+          
+          <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Theme">
+            <i data-lucide="moon"></i>
+          </button>
+          
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Mobile Menu">
+            <i data-lucide="menu"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Body -->
+      <div class="content-body">
+        
+        <!-- Filter and Search Bar -->
+        <section class="card filter-bar">
+          <div class="search-input-wrapper">
+            <i data-lucide="search"></i>
+            <input type="text" id="bookSearchInput" class="form-control" placeholder="Search by title, author, or ISBN...">
+          </div>
+          
+          <select id="categoryFilter" class="filter-select">
+            <option value="all">All Categories</option>
+            <option value="Computers">Computers</option>
+            <option value="Science">Science</option>
+            <option value="Fiction">Fiction</option>
+            <option value="History">History</option>
+            <option value="Psychology">Psychology</option>
+            <option value="Biography">Biography</option>
+            <option value="Business">Business</option>
+          </select>
+          
+          <select id="availabilityFilter" class="filter-select">
+            <option value="all">All Availability</option>
+            <option value="available">Available Now</option>
+            <option value="outofstock">Out of Stock</option>
+          </select>
+          
+          <button class="btn btn-primary admin-only" id="addBookBtn">
+            <i data-lucide="plus"></i> <span>Add New Book</span>
+          </button>
+        </section>
+
+        <!-- Books Grid Container -->
+        <section class="books-grid" id="booksGridContainer">
+          <!-- Javascript dynamically populates this -->
+        </section>
+        
+      </div>
+
+      <!-- Add/Edit Book Modal -->
+      <div class="modal-overlay" id="bookModalOverlay">
+        <div class="modal-container">
+          <div class="modal-header">
+            <h3 class="modal-title" id="bookModalTitle">Add New Book</h3>
+            <button class="modal-close" id="closeBookModal">&times;</button>
+          </div>
+          <form id="bookForm">
+            <div class="modal-body">
+              <input type="hidden" id="bookFormId">
+              
+              <div class="form-group">
+                <label for="bookTitleInput">Book Title *</label>
+                <input type="text" id="bookTitleInput" class="form-control" placeholder="e.g. Clean Architecture" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="bookAuthorInput">Author *</label>
+                <input type="text" id="bookAuthorInput" class="form-control" placeholder="e.g. Robert C. Martin" required>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="bookIsbnInput">ISBN-13 *</label>
+                  <input type="text" id="bookIsbnInput" class="form-control" placeholder="e.g. 978-0134494166" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="bookCategoryInput">Category *</label>
+                  <select id="bookCategoryInput" class="form-control" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="Computers">Computers</option>
+                    <option value="Science">Science</option>
+                    <option value="Fiction">Fiction</option>
+                    <option value="History">History</option>
+                    <option value="Psychology">Psychology</option>
+                    <option value="Biography">Biography</option>
+                    <option value="Business">Business</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="bookYearInput">Published Year *</label>
+                  <input type="number" id="bookYearInput" class="form-control" placeholder="e.g. 2017" min="1000" max="2030" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="bookCopiesInput">Total Copies *</label>
+                  <input type="number" id="bookCopiesInput" class="form-control" placeholder="e.g. 5" min="1" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="bookLocationInput">Shelf Location *</label>
+                <input type="text" id="bookLocationInput" class="form-control" placeholder="e.g. Shelf A-3" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="bookImageInput">Cover Image URL (Optional)</label>
+                <input type="url" id="bookImageInput" class="form-control" placeholder="https://images.unsplash.com/photo-...">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" id="cancelBookBtn">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="saveBookBtn">Save Book</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="main-footer">
+        <div>&copy; 2026 LMS Portal. All rights reserved. Built with HSL Style Guidelines.</div>
+        <ul class="footer-links">
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="books.html">Catalogue</a></li>
+          <li><a href="reports.html">Reports</a></li>
+        </ul>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Shared core JS script, followed by page script -->
+  <script src="js/core.js"></script>
+  <script src="js/books.js"></script>
+</body>
+</html>

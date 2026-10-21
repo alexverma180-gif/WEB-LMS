@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Issue books, track active checkouts, process returns, and view borrow histories.">
+  <title>Transactions - LMS Library Portal</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="brand">
+        <div class="brand-logo">L</div>
+        <span class="brand-name">LMS Portal</span>
+      </div>
+      
+      <nav class="nav-menu">
+        <li class="nav-item">
+          <a href="index.html">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="books.html">
+            <i data-lucide="book-open"></i>
+            <span>Books Catalogue</span>
+          </a>
+        </li>
+        <li class="nav-item admin-only">
+          <a href="members.html">
+            <i data-lucide="users"></i>
+            <span>Manage Members</span>
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a href="transactions.html">
+            <i data-lucide="arrow-left-right"></i>
+            <span>Transactions</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="reports.html">
+            <i data-lucide="bar-chart-3"></i>
+            <span>Analytics & Reports</span>
+          </a>
+        </li>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-profile-badge">
+          <!-- Populated by core.js -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Layout -->
+    <main class="main-layout">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="page-title-area">
+          <h1 class="page-title">Book Transactions</h1>
+          <span class="page-subtitle" id="transactionSubtitle">Process returns, renewals, and new checkouts</span>
+        </div>
+        
+        <div class="header-actions">
+          <div class="role-switcher-container">
+            <span>Role:</span>
+            <select id="headerRoleSelect">
+              <option value="Admin">Admin</option>
+              <option value="Member">Member</option>
+            </select>
+          </div>
+          
+          <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Theme">
+            <i data-lucide="moon"></i>
+          </button>
+          
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Mobile Menu">
+            <i data-lucide="menu"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Body -->
+      <div class="content-body">
+        
+        <!-- Outer Grid changing by Role via JS -->
+        <div id="transactionsLayoutWrapper" class="content-grid-2">
+          
+          <!-- LEFT COLUMN: Transactions Log List -->
+          <section class="card" style="display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+              <h3 style="font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="list-filter" style="color: var(--primary);"></i> 
+                <span id="transListTitle">Active Checkouts</span>
+              </h3>
+              
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="text" id="transSearchInput" class="form-control" placeholder="Search logs..." style="width: auto; padding: 0.5rem 0.75rem; font-size: 0.85rem;">
+                <select id="transStatusFilter" class="filter-select" style="min-width: 120px; padding: 0.5rem 0.75rem; font-size: 0.85rem;">
+                  <option value="active">Active Only</option>
+                  <option value="Overdue">Overdue Only</option>
+                  <option value="Returned">Returned Only</option>
+                  <option value="all">All Logs</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr id="tableHeadersRow">
+                    <th>Reader</th>
+                    <th>Book Details</th>
+                    <th>Timeline</th>
+                    <th>Status</th>
+                    <th class="admin-only">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="transactionsTableBody">
+                  <!-- JS Rendered -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- RIGHT COLUMN: Issue Form Panel (Admin Only) -->
+          <section class="card admin-only" id="issueFormPanel" style="height: fit-content;">
+            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="plus-circle" style="color: var(--success);"></i> Issue Book to Reader
+            </h3>
+            
+            <form id="issueBookForm">
+              
+              <!-- Member Autocomplete Field -->
+              <div class="form-group" style="position: relative;">
+                <label for="issueMemberInput">Library Member *</label>
+                <input type="text" id="issueMemberInput" class="form-control" placeholder="Type member name..." autocomplete="off" required>
+                <input type="hidden" id="selectedMemberId">
+                <div class="autocomplete-list" id="memberAutocompleteList"></div>
+              </div>
+
+              <!-- Book Autocomplete Field -->
+              <div class="form-group" style="position: relative;">
+                <label for="issueBookInput">Book Title *</label>
+                <input type="text" id="issueBookInput" class="form-control" placeholder="Type title, author, or ISBN..." autocomplete="off" required>
+                <input type="hidden" id="selectedBookId">
+                <div class="autocomplete-list" id="bookAutocompleteList"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="issueDueDate">Return Due Date *</label>
+                <input type="date" id="issueDueDate" class="form-control" required>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                <i data-lucide="navigation-2"></i> Confirm Borrow Issue
+              </button>
+            </form>
+          </section>
+
+        </div>
+        
+      </div>
+
+      <!-- Footer -->
+      <footer class="main-footer">
+        <div>&copy; 2026 LMS Portal. All rights reserved. Built with HSL Style Guidelines.</div>
+        <ul class="footer-links">
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="books.html">Catalogue</a></li>
+          <li><a href="reports.html">Reports</a></li>
+        </ul>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Shared core JS script, followed by page script -->
+  <script src="js/core.js"></script>
+  <script src="js/transactions.js"></script>
+</body>
+</html>
